@@ -36,7 +36,7 @@ git clone https://github.com/RebelleMasque/Hacking-send.spy.git
 cd Hacking-send.spy
 ```
 ```bash
-Hacking-send.spy -id TON_ID -cl TON_TOKEN
+python Hacking-send.spy -id TON_ID -cl TON_TOKEN
 ```
 
 ## Utilisation :
@@ -44,7 +44,7 @@ Hacking-send.spy -id TON_ID -cl TON_TOKEN
 
 - **récupère les dossiers de vautre victime** :
 
-* **Commande** :  Hacking-send.spy -id TON_ID -cl TON_TOKEN
+* **Commande** :  pythonH acking-send.spy -id TON_ID -cl TON_TOKEN
 
 - **Force brute sur un compte Facebook avec proxy** :
 
